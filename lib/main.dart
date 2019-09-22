@@ -1,7 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:mobx_review/home_page.dart';
+import 'dart:io';
 
-void main() => runApp(MyApp());
+import 'package:flutter/material.dart';
+import 'package:mobx_review/review_page.dart';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
+
+void main() {
+  /// https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
+  TargetPlatform targetPlatform;
+  if (Platform.isMacOS) {
+    targetPlatform = TargetPlatform.iOS;
+  } else if (Platform.isLinux || Platform.isWindows) {
+    targetPlatform = TargetPlatform.fuchsia;
+  }
+  if (targetPlatform != null) {
+    debugDefaultTargetPlatformOverride = targetPlatform;
+  }
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -9,10 +26,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MobX Review App',
-      theme: ThemeData.dark(),
-      home: HomePage()
+      theme: ThemeData.light(),
+      home: ReviewPage(),
     );
   }
 }
-
-
