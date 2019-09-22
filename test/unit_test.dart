@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobx_review/models/review_model.dart';
 import 'package:mobx_review/models/reviews.dart';
+import 'package:mobx_review/service_locator.dart';
 
-void main() {
+Future<void> main() async {
+  await registerMockDependencies();
   test('Test MobX state class', () async {
     final Reviews _reviewsStore = Reviews();
 
@@ -21,5 +23,5 @@ void main() {
     );
 
     expect(_reviewsStore.averageStars, 4);
-  }, skip: true);
+  });
 }

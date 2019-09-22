@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mobx_review/models/review_model.dart';
+import 'package:mobx_review/service_locator.dart';
+import 'package:mobx_review/services/review_service.dart';
 part 'reviews.g.dart';
 
 class Reviews = ReviewsBase with _$Reviews;
@@ -19,7 +20,7 @@ abstract class ReviewsBase with Store {
 
   int totalStars = 0;
 
-  static Box box;
+  final ReviewService _reviewService = sl<ReviewService>();
 
   @action
   void addReview(ReviewModel newReview) {
@@ -37,30 +38,20 @@ abstract class ReviewsBase with Store {
   Future<void> initReviews() async {
     final List<ReviewModel> reviewList = await _getReviews();
 
-    final ObservableList<ReviewModel> reviews = ObservableList.of(reviewList);
+    reviews = ObservableList.of(reviewList);
 
     for (ReviewModel review in reviews) {
       totalStars += review.stars;
     }
-    averageStars = totalStars / reviews.length;
+    averageStars = reviews.length != 0 ? (totalStars / reviews.length) : 0;
   }
 
   double _calculateAverageStars(int newStars) {
     return (newStars + totalStars) / numberOfReviews;
   }
 
-  bool _isBoxOpen() => Hive.isBoxOpen('reviews');
-  Future<Box> _openBox() => Hive.openBox('reviews');
-  Future<void> _initBox() async {
-    if (!_isBoxOpen() || box == null) {
-      box = await _openBox();
-    }
-  }
-
   Future<void> _persistReview(List<ReviewModel> updatedReviews) async {
     List<String> reviewsStringList = [];
-
-    await _initBox();
 
     for (ReviewModel review in updatedReviews) {
       Map<String, dynamic> reviewMap = review.toJson();
@@ -68,16 +59,11 @@ abstract class ReviewsBase with Store {
       reviewsStringList.add(reviewString);
     }
 
-    await box.put('user_reviews', reviewsStringList);
+    _reviewService.saveReviews(reviewsStringList);
   }
 
   Future<List<ReviewModel>> _getReviews() async {
-    await _initBox();
-
-    final List<String> reviewsStringList = box.get(
-      'user_reviews',
-      defaultValue: <String>[],
-    ) as List<String>;
+    final List<String> reviewsStringList = _reviewService.getReviews();
 
     final List<ReviewModel> retrievedReviews = [];
 

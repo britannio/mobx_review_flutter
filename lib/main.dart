@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:mobx_review/review_page.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
-import 'package:path_provider/path_provider.dart';
+import 'package:mobx_review/service_locator.dart';
 
-void main() async {
+Future<void> main() async {
   /// https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
   TargetPlatform targetPlatform;
   if (Platform.isMacOS) {
@@ -20,10 +19,7 @@ void main() async {
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-
-  final Directory dir = await getApplicationDocumentsDirectory();
-  Hive.init(dir.path);
-
+  await registerReleaseDependencies();
   runApp(MyApp());
 }
 
