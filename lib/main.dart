@@ -19,6 +19,8 @@ void main() async {
     debugDefaultTargetPlatformOverride = targetPlatform;
   }
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   final Directory dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
 

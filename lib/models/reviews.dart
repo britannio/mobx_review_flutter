@@ -75,8 +75,8 @@ abstract class ReviewsBase with Store {
 
     final List<String> reviewsStringList = box.get(
       'user_reviews',
-      defaultValue: [],
-    );
+      defaultValue: <String>[],
+    ) as List<String>;
 
     final List<ReviewModel> retrievedReviews = [];
 
