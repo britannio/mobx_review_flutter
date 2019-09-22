@@ -25,13 +25,16 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   # State management using observables, actions and reactions
-  # mobx: ^0.3.8+1
+  mobx: ^0.3.8+1
 
   # Flutter wrapper for the mobX library providing the Observer widget
   flutter_mobx: ^0.3.3+1
 
   # Pure dart key/value store
   hive: ^1.0.0
+
+  # provides the directory for storing files
+  path_provider: ^1.3.0
 
 dev_dependencies:
   flutter_test:
