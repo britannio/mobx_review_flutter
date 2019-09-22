@@ -35,12 +35,13 @@ abstract class ReviewsBase with Store {
 
   @action
   Future<void> initReviews() async {
-    await _getReviews().then((onValue) {
-      reviews = ObservableList.of(onValue);
-      for (ReviewModel review in reviews) {
-        totalStars += review.stars;
-      }
-    });
+    final List<ReviewModel> reviewList = await _getReviews();
+
+    final ObservableList<ReviewModel> reviews = ObservableList.of(reviewList);
+
+    for (ReviewModel review in reviews) {
+      totalStars += review.stars;
+    }
     averageStars = totalStars / reviews.length;
   }
 
